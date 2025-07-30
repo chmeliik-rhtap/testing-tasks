@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/chmeliik/task-repo-boilerplate",
-  "commit": "94582d7c10401dfcad62a43947def254e73eadb2",
+  "commit": "c66b8886d483bf5cf49fcb2735312ad96a07b424",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -9,7 +9,7 @@
         "*"
       ],
       "_template": "https://github.com/chmeliik/task-repo-boilerplate",
-      "_commit": "94582d7c10401dfcad62a43947def254e73eadb2"
+      "_commit": "c66b8886d483bf5cf49fcb2735312ad96a07b424"
     }
   },
   "directory": null
