@@ -27,8 +27,6 @@ version of the templates you have.
 > If you have [`uv`][uv] installed, you can run `uvx cruft` and don't need
 > to install `cruft` itself.
 
-TODO: add a github action that checks for updates and sends PRs.
-
 ## Making changes
 
 You can edit the shared CI files if necessary, but please consider sending PRs
