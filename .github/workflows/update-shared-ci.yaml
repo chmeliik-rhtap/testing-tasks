@@ -1,0 +1,71 @@
+name: Update shared CI files
+permissions:
+  contents: write
+  actions: write
+  pull-requests: write
+on:
+  workflow_dispatch:
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # cruft works better with full git history
+          fetch-depth: 0
+
+      - name: Run cruft update
+        id: update
+        run: |
+          #!/bin/bash
+          set -euo pipefail
+
+          # git config --global user.email "boilerplate-updater@konflux-ci.org"
+          # git config --global user.name "Boiler Upper"
+
+          pipx run cruft update --skip-apply-ask --refresh-private-variables
+          git restore --staged .
+
+          # if [[ -n "$(git status -s)" ]]; then
+          #   echo "has_updates=true" >> "$GITHUB_OUTPUT"
+          # else
+          #   echo "has_updates=false" >> "$GITHUB_OUTPUT"
+          # fi
+
+          cat << EOF > /tmp/body.txt
+          Update shared CI from <https://github.com/chmeliik/task-repo-boilerplate>
+
+          [cruft](https://cruft.github.io/cruft/) has detected updates
+          EOF
+
+          if git ls-files --others --modified --exclude-standard | xargs grep -q '^<<<<<<< ours'
+          then
+            echo draft=always-true >> "$GITHUB_OUTPUT"
+            cat << EOF >> /tmp/body.txt
+
+          > [!CAUTION]
+          > This PR has merge conflicts!
+          >
+          > Please address the conflicts manually and then mark the PR ready for review.
+          EOF
+          else
+            echo draft=false >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.UPDATER_APP_ID }}
+          private-key: ${{ secrets.UPDATER_PRIVATE_KEY }}
+
+      - name: Create pull request
+        # if: steps.update.outputs.has_updates == 'true'
+        uses: peter-evans/create-pull-request@v7.0.8
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          title: Update shared CI files
+          commit-message: "chore: update shared CI files"
+          branch: cruft/update
+          delete-branch: true
+          draft: ${{ steps.update.outputs.draft }}
+          body-path: /tmp/body.txt
