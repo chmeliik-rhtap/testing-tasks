@@ -20,17 +20,8 @@ jobs:
           #!/bin/bash
           set -euo pipefail
 
-          # git config --global user.email "boilerplate-updater@konflux-ci.org"
-          # git config --global user.name "Boiler Upper"
-
           pipx run cruft update --skip-apply-ask --refresh-private-variables
           git restore --staged .
-
-          # if [[ -n "$(git status -s)" ]]; then
-          #   echo "has_updates=true" >> "$GITHUB_OUTPUT"
-          # else
-          #   echo "has_updates=false" >> "$GITHUB_OUTPUT"
-          # fi
 
           cat << EOF > /tmp/body.txt
           Update shared CI from <https://github.com/chmeliik/task-repo-boilerplate>
@@ -44,7 +35,7 @@ jobs:
             cat << EOF >> /tmp/body.txt
 
           > [!CAUTION]
-          > This PR has merge conflicts!
+          > The update resulted in merge conflicts!
           >
           > Please address the conflicts manually and then mark the PR ready for review.
           EOF
