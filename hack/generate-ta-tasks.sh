@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # <TEMPLATED FILE!>
-# This file comes from the templates at https://github.com/chmeliik/task-repo-boilerplate.
+# This file comes from the templates at https://github.com/konflux-ci/task-repo-shared-ci.
 # Please consider sending a PR upstream instead of editing the file directly.
 # See the SHARED-CI.md document in this repo for more details.
 
@@ -19,7 +19,7 @@ command -v go &> /dev/null || { echo Please install golang to run this tool; exi
 HACK_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 TASK_DIR="$(realpath "${ROOT_DIR}/task")"
-: "${TRUSTED_ARTIFACTS=../build-definitions/task-generator/trusted-artifacts}"
+: "${TRUSTED_ARTIFACTS=github.com/konflux-ci/build-definitions/task-generator/trusted-artifacts@latest}"
 
 tashdir="$(mktemp --dry-run)"
 if [[ -d "${TRUSTED_ARTIFACTS}" ]]; then
@@ -56,7 +56,6 @@ msg="File is out of date and has been updated"
 if [ "${GITHUB_ACTIONS:-false}" == "true" ]; then
   # shellcheck disable=SC2016
   msg='File is out of date, run `hack/generate-ta-tasks.sh` and include the updated file with your changes.'
-  msg+=' Or run ./hack/generate-everything.sh to run all the generators at once.'
 fi
 
 cd "${TASK_DIR}"
@@ -64,13 +63,8 @@ for recipe_path in **/recipe.yaml; do
     task_path="${recipe_path%/recipe.yaml}/$(basename "${recipe_path%/*/*}").yaml"
     sponge=$(tash "${TASK_DIR}/${recipe_path}")
     echo "${sponge}" > "${task_path}"
-    readme_path="${recipe_path%/recipe.yaml}/README.md"
-    "${HACK_DIR}/generate-readme.sh" "${task_path}" > "${readme_path}"
     if ! git diff --quiet HEAD "${task_path}"; then
         emit "task/${task_path}" "${msg}"
-    fi
-    if ! git diff --quiet HEAD "${readme_path}"; then
-        emit "task/${readme_path}" "${msg}"
     fi
 done
 

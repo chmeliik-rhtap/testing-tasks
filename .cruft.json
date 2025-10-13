@@ -1,6 +1,6 @@
 {
-  "template": "https://github.com/chmeliik/task-repo-boilerplate",
-  "commit": "b55c7e946dcac856827be8c21d96eecbe0a5b334",
+  "template": "https://github.com/chmeliik-rhtap/task-repo-shared-ci",
+  "commit": "76f78db6edf06eec448b9d2b208611588720662e",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -8,8 +8,8 @@
       "_copy_without_render": [
         "*"
       ],
-      "_template": "https://github.com/chmeliik/task-repo-boilerplate",
-      "_commit": "b55c7e946dcac856827be8c21d96eecbe0a5b334"
+      "_template": "https://github.com/chmeliik-rhtap/task-repo-shared-ci",
+      "_commit": "76f78db6edf06eec448b9d2b208611588720662e"
     }
   },
   "directory": null
