@@ -6,3 +6,6 @@ name: Update shared CI files
 jobs:
   call-update-workflow:
     uses: chmeliik-rhtap/task-repo-shared-ci/.github/workflows/update-shared-ci.yaml@main
+    secrets:
+      SHARED_CI_UPDATER_APP_ID: ${{ secrets.SHARED_CI_UPDATER_APP_ID }}
+      SHARED_CI_UPDATER_PRIVATE_KEY: ${{ secrets.SHARED_CI_UPDATER_PRIVATE_KEY }}
